@@ -114,10 +114,41 @@ if (backToTopBtn) {
     });
 }
 
+// Highlight Active Nav Link
+function highlightActiveNav() {
+    const navLinks = document.querySelectorAll('nav ul li a');
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        const linkHref = link.getAttribute('href');
+
+        // Check for About Page
+        if (currentPath === '/about' && linkHref === '/about') {
+            link.classList.add('active');
+        }
+        // Check for Categories
+        else if (currentSearch.includes('category=Technology') && linkHref.includes('category=Technology')) {
+            link.classList.add('active');
+        }
+        else if (currentSearch.includes('category=Lifestyle') && linkHref.includes('category=Lifestyle')) {
+            link.classList.add('active');
+        }
+        // Check for Home (No active search params, or explicit home path)
+        else if ((currentPath === '/' || currentPath === '/index.html') && !currentSearch && (linkHref === '/' || linkHref === '/index.html')) {
+            link.classList.add('active');
+        }
+    });
+}
+
 // Initial Render and Fade In
 document.addEventListener('DOMContentLoaded', () => {
     // Force fade-in even if other things fail
     document.body.classList.add('fade-in');
+
+    // Highlight Active Link
+    highlightActiveNav();
 
     // Only fetch posts if we are on a page that needs them (has blogGrid)
     if (blogGrid) {
