@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - ptechsolutionsBlog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="glass-header">
+        <div class="logo">
+            <i class="fas fa-feather-alt"></i> ptechsolutions<span class="highlight">Blog</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/?category=Technology">Technology</a></li>
+                <li><a href="/?category=Lifestyle">Lifestyle</a></li>
+                <li><a href="/about" class="active">About</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <button class="subscribe-btn">Subscribe</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-section" style="height: auto; padding: 100px 0;">
+            <div class="glass-card" style="padding: 60px; text-align: left;">
+                <h1 class="section-title" style="text-align: left; margin-bottom: 30px;">About <span
+                        class="highlight">ptechsolutions</span></h1>
+
+                <h2 style="margin-bottom: 20px;">Innovating with Purpose</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 30px; color: rgba(255,255,255,0.8);">
+                    ptechsolutions is a dynamic team of professionals driven by a shared commitment to transforming
+                    innovative ideas into impactful solutions. Our diverse expertise spans multiple disciplines,
+                    enabling us to deliver tailored strategies that meet the unique needs of our clients.
+                </p>
+
+                <h2 style="margin-bottom: 20px;">Our Philosophy</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 40px; color: rgba(255,255,255,0.8);">
+                    Collaboration is the cornerstone of our approach. We believe that combining varied perspectives
+                    fosters innovation and ensures exceptional outcomes. By leveraging our collective knowledge,
+                    industry experience, and cutting-edge tools, we consistently provide solutions that exceed
+                    expectations and drive measurable results.
+                </p>
+
+                <h2 style="margin-bottom: 30px;">Meet The Team</h2>
+                <div class="blog-grid">
+                    <!-- Team Member 1 -->
+                    <div class="blog-card" style="padding: 20px; text-align: center;">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+                            alt="Thulane Sigasa"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px;">
+                        <h3 class="card-title" style="font-size: 1.2rem; margin-bottom: 5px;">Thulane Sigasa</h3>
+                        <p class="highlight" style="font-size: 0.9rem;">Founder</p>
+                    </div>
+
+                    <!-- Team Member 2 -->
+                    <div class="blog-card" style="padding: 20px; text-align: center;">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+                            alt="Troy Malemia"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px;">
+                        <h3 class="card-title" style="font-size: 1.2rem; margin-bottom: 5px;">Troy Malemia</h3>
+                        <p class="highlight" style="font-size: 0.9rem;">Frontend Developer</p>
+                    </div>
+
+                    <!-- Team Member 3 -->
+                    <div class="blog-card" style="padding: 20px; text-align: center;">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+                            alt="Oratile Masetla"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px;">
+                        <h3 class="card-title" style="font-size: 1.2rem; margin-bottom: 5px;">Oratile Masetla</h3>
+                        <p class="highlight" style="font-size: 0.9rem;">UI/UX Designer</p>
+                    </div>
+
+                    <!-- Team Member 4 -->
+                    <div class="blog-card" style="padding: 20px; text-align: center;">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+                            alt="Ntsako Ngobeni"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px;">
+                        <h3 class="card-title" style="font-size: 1.2rem; margin-bottom: 5px;">Ntsako Ngobeni</h3>
+                        <p class="highlight" style="font-size: 0.9rem;">Backend Developer</p>
+                    </div>
+
+                    <!-- Team Member 5 -->
+                    <div class="blog-card" style="padding: 20px; text-align: center;">
+                        <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+                            alt="Musa Mbokazi"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px;">
+                        <h3 class="card-title" style="font-size: 1.2rem; margin-bottom: 5px;">Musa Mbokazi</h3>
+                        <p class="highlight" style="font-size: 0.9rem;">Content Strategist</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>ptechsolutionsBlog</h3>
+                <p>Turning Challenges into Opportunities & Goals into Reality.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/thulanesigasa" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/share/18Q2hZS4Zg/" target="_blank"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.linkedin.com/in/thulanesigasa" target="_blank"><i
+                            class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.tiktok.com/@thulanesigasa" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 ptechsolutionsBlog. Built correctly.
+        </div>
+    </footer>
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5: Blog Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-animation">
+        <!-- Abstract background elements can be added here or via CSS -->
+    </div>
+
+    <!-- Header -->
+    <header class="glass-header">
+        <div class="logo">
+            <i class="fas fa-feather-alt"></i> ptechsolutions<span class="highlight">Blog</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/?category=Technology">Technology</a></li>
+                <li><a href="/?category=Lifestyle">Lifestyle</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <!-- Theme toggle could go here, reusing logic if desired -->
+            <button class="subscribe-btn">Subscribe</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content glass-card">
+            <h1>Exploring the <span class="highlight">Future</span> of Design</h1>
+            <p>Dive into a world where aesthetics meet functionality. Discover the latest trends in web development,
+                UI/UX, and digital creativity.</p>
+            <div class="hero-buttons">
+                <button class="primary-btn">Read Featured</button>
+                <button class="secondary-btn">View All Posts</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <main class="container">
+        <h2 class="section-title">Latest Articles</h2>
+        <div id="blog-grid" class="blog-grid">
+            <!-- Blog posts will be injected here by JS -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>ptechsolutionsBlog</h3>
+                <p>Premium content for modern developers and designers.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/thulanesigasa" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/share/18Q2hZS4Zg/" target="_blank"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.linkedin.com/in/thulanesigasa" target="_blank"><i
+                            class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.tiktok.com/@thulanesigasa" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 ptechsolutionsBlog. Built correctly.
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Modal for Reading Posts -->
+    <div id="post-modal" class="modal hidden">
+        <div class="modal-content glass-card">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
