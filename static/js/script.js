@@ -8,6 +8,8 @@ let blogPosts = [];
 
 // Fetch Posts from Flask API
 async function fetchPosts() {
+    if (!blogGrid) return; // Don't fetch if no grid to render to
+
     try {
         const response = await fetch('/api/posts');
         const data = await response.json();
@@ -22,7 +24,8 @@ async function fetchPosts() {
             const sectionTitle = document.querySelector('.section-title');
             if (sectionTitle) sectionTitle.textContent = `${category} Articles`;
         } else {
-            blogPosts = data.blogPosts;
+            // If no category (Home Page), show only latest 3
+            blogPosts = data.blogPosts.slice(0, 3);
         }
 
         renderPosts();
@@ -34,6 +37,7 @@ async function fetchPosts() {
 
 // Render Posts
 function renderPosts() {
+    if (!blogGrid) return;
     blogGrid.innerHTML = '';
     blogPosts.forEach(post => {
         const card = document.createElement('div');
@@ -57,6 +61,8 @@ function renderPosts() {
 
 // Open Modal
 window.openPost = function (id) {
+    if (!modal || !modalBody) return;
+
     const post = blogPosts.find(p => p.id === id);
     if (!post) return;
 
@@ -72,32 +78,34 @@ window.openPost = function (id) {
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
 }
 
-// Close Modal
-closeModal.addEventListener('click', () => {
-    modal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-});
-
-// Close on outside click
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
+// Close Modal logic
+if (closeModal && modal) {
+    closeModal.addEventListener('click', () => {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
-    }
-});
+    });
+
+    // Close on outside click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
 
 // Back to Top Logic
 const backToTopBtn = document.getElementById('back-to-top');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        backToTopBtn.classList.add('visible');
-    } else {
-        backToTopBtn.classList.remove('visible');
-    }
-});
-
 if (backToTopBtn) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
             top: 0,
@@ -106,22 +114,50 @@ if (backToTopBtn) {
     });
 }
 
-// Initial Render
+// Initial Render and Fade In
 document.addEventListener('DOMContentLoaded', () => {
+    // Force fade-in even if other things fail
     document.body.classList.add('fade-in');
-    fetchPosts();
+
+    // Only fetch posts if we are on a page that needs them (has blogGrid)
+    if (blogGrid) {
+        fetchPosts();
+    }
 });
 
-// Smooth Page Transitions
+// Smooth Page Transitions & Home Scroll
 document.querySelectorAll('a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        if (this.href.includes(window.location.origin) && !this.href.includes('#')) {
-            e.preventDefault();
-            const target = this.href;
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                window.location.href = target;
-            }, 500);
+        // Check if internal link
+        if (this.href.includes(window.location.host)) {
+            // Check if clicking "Home" ("/" or "/index.html") while on Home
+            // We need to check if the pathname corresponds to home
+            const currentPath = window.location.pathname;
+            const targetPath = new URL(this.href).pathname;
+
+            const isHome = (path) => path === '/' || path === '/index.html';
+
+            if (isHome(currentPath) && isHome(targetPath)) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // If we also had search params (categories), clear them to return to "Home" state
+                if (window.location.search) {
+                    window.history.pushState({}, '', '/');
+                    fetchPosts(); // Reload to show default (top 3) posts
+                }
+                return;
+            }
+
+            // Normal transition for other links
+            if (!this.href.includes('#') && this.target !== '_blank') {
+                e.preventDefault();
+                const target = this.href;
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 500);
+            }
         }
     });
 });
