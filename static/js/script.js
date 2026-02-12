@@ -161,26 +161,20 @@ document.querySelectorAll('a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         // Check if internal link
         if (this.href.includes(window.location.host)) {
-            // Check if clicking "Home" ("/" or "/index.html") while on Home
-            // We need to check if the pathname corresponds to home
             const currentPath = window.location.pathname;
             const targetPath = new URL(this.href).pathname;
+            const targetSearch = new URL(this.href).search;
 
             const isHome = (path) => path === '/' || path === '/index.html';
 
-            if (isHome(currentPath) && isHome(targetPath)) {
+            // Check if clicking "Home" while on Home AND sticking to Home (no params)
+            if (isHome(currentPath) && isHome(targetPath) && (!window.location.search && !targetSearch)) {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                // If we also had search params (categories), clear them to return to "Home" state
-                if (window.location.search) {
-                    window.history.pushState({}, '', '/');
-                    fetchPosts(); // Reload to show default (top 3) posts
-                }
                 return;
             }
 
-            // Normal transition for other links
+            // Normal transition for other links (including categories)
             if (!this.href.includes('#') && this.target !== '_blank') {
                 e.preventDefault();
                 const target = this.href;

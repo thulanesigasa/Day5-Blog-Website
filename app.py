@@ -1,131 +1,158 @@
-from flask import Flask, render_template, jsonify
-import os
+from flask import Flask, render_template, jsonify, request
+from datetime import datetime
 
 app = Flask(__name__)
 
-# Mock Database
+# Mock Database of Blog Posts
+# Images from Unsplash
 blog_posts = [
     {
         "id": 1,
         "title": "The Rise of Glassmorphism in 2026",
         "category": "Design",
-        "date": "October 12, 2026",
+        "date": "February 10, 2026",
         "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Why the frosted glass effect is dominating modern UI design and how to implement it correctly.",
-        "content": "<p>Glassmorphism has taken the design world by storm...</p>"
+        "excerpt": "Why the frosted glass effect is dominating modern UI design.",
+        "content": """<p>Glassmorphism has taken the design world by storm, evolving from a trend into a staple of modern UI design. Its characteristic 'frosted glass' look, created by background blur and semi-transparent white layers, adds depth and hierarchy to interfaces without cluttering them.</p>
+<p>In 2026, we are seeing a more refined version of this style. Designers are using it to create 'floating' elements that feel lightweight and ethereal. The key to successful glassmorphism lies in the balance between transparency and blur. Too much transparency, and the text becomes unreadable; too much blur, and the effect is lost.</p>
+<p>CSS backdrop-filter is the engine behind this effect. By combining it with subtle borders and shadows, developers can create cards, modals, and navigation bars that feel like they are made of premium glass. This aesthetic not only looks futuristic but also helps in establishing a visual hierarchy by separating foreground content from the background.</p>"""
     },
     {
         "id": 2,
         "title": "Optimizing JavaScript for Performance",
         "category": "Technology",
-        "date": "October 08, 2026",
+        "date": "February 08, 2026",
         "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "A deep dive into V8 engine mechanics and how to write non-blocking code for smoother experiences.",
-        "content": "<p>Performance is key...</p>"
+        "excerpt": "A deep dive into V8 engine mechanics in 2026.",
+        "content": """<p>Performance remains key in modern web development. Users expect instant interactions, and sluggish JavaScript can kill user experience faster than poor design. Optimizing your code starts with understanding how the JavaScript engine works.</p>
+<p>The V8 engine, which powers Chrome and Node.js, uses Just-In-Time (JIT) compilation. Writing code that is 'optimizable' means keeping object shapes consistent and avoiding dynamic typing where possible. Furthermore, offloading heavy computations to Web Workers prevents the main thread from blocking, ensuring that the UI remains responsive.</p>
+<p>Another critical aspect is memory management. Avoiding memory leaks by properly cleaning up event listeners and intervals is crucial for long-running single-page applications. Profiling tools in browser DevTools are your best friend here, allowing you to identify bottlenecks and optimize them effectively.</p>"""
     },
     {
         "id": 3,
         "title": "A Digital Nomad's Guide to Tokyo",
         "category": "Lifestyle",
-        "date": "September 25, 2026",
+        "date": "February 05, 2026",
         "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Best cafes for working, finding affordable stays, and navigating the tech scene in Japan's capital.",
-        "content": "<p>Tokyo offers a unique blend...</p>"
+        "excerpt": "Best cafes and coworking spaces in Tokyo.",
+        "content": """<p>Tokyo offers a unique blend of tradition and hyper-modernity, making it a fascinating destination for digital nomads. While known for being expensive, there are plenty of ways to enjoy the city on a budget while staying productive.</p>
+<p>Shibuya and Shinjuku are the hearts of the action, but for a quieter workspace, look towards neighborhoods like Kichijoji or Shimokitazawa. These areas offer a plethora of hip cafes with reliable Wi-Fi and power outlets. Coworking spaces are also booming, providing networking opportunities with local startups and fellow travelers.</p>
+<p>Accommodation can be found in share houses or 'social apartments,' which are popular among foreigners and convenient for short-term stays. And let's not forget the food – from convenience store onigiri to Michelin-starred ramen, Tokyo keeps you fueled for your coding sessions.</p>"""
     },
     {
         "id": 4,
-        "title": "AI in Creative Arts",
+        "title": "The ethics of AI Art",
         "category": "Innovation",
-        "date": "September 15, 2026",
-        "image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Can machines truly bear a creative soul? Exploring the boundaries of generative art and music.",
-        "content": "<p>The debate continues...</p>"
+        "date": "February 01, 2026",
+        "image": "https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        "excerpt": "Navigating copyright in the age of generative AI.",
+        "content": """<p>AI art generators have democratized creativity, allowing anyone to visualize ideas in seconds. However, this power comes with significant ethical questions. Who owns the copyright to an image generated by a machine trained on billions of human-made artworks?</p>
+<p>Artists are rightfully concerned about their style being mimicking without consent or compensation. The debate touches on the very definition of creativity. Is the prompter the artist, or is the AI? As regulations struggle to keep up with technology, the community is divided.</p>
+<p>We are likely to see a future where 'human-made' becomes a premium label, distinct from AI-generated content. Transparency and ethical sourcing of training data will be the next battleground for companies building these powerful tools.</p>"""
     },
     {
         "id": 5,
-        "title": "Sustainable Web Design",
+        "title": "Green Tech: Saving the Planet?",
         "category": "Eco-Tech",
-        "date": "September 02, 2026",
-        "image": "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "How reducing payload sizes and optimizing server requests can help save the planet.",
-        "content": "<p>Every byte of data requires energy...</p>"
+        "date": "January 28, 2026",
+        "image": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        "excerpt": "Innovations in solar and battery storage.",
+        "content": """<p>The transition to renewable energy is accelerating, driven by breakthroughs in battery technology and solar efficiency. Solid-state batteries promise safer, longer-lasting energy storage, addressing one of the biggest hurdles in adopting electric vehicles and grid-scale renewables.</p>
+<p>Meanwhile, smart grids are using AI to optimize energy distribution, reducing waste and ensuring stability. It's not just about generating clean energy, but using it intelligently. From vertical farming to carbon capture, technology is providing the tools we need to mitigate climate change.</p>
+<p>However, technology alone isn't a silver bullet. It requires policy changes and collective action. Green tech provides the means, but the will to change must come from us.</p>"""
     },
-    {
+     {
         "id": 6,
-        "title": "The Minimalist Workspace",
+        "title": "Mastering Deep Work",
         "category": "Productivity",
-        "date": "August 28, 2026",
+        "date": "January 25, 2026",
         "image": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Declutter your desk, declutter your mind. Setting up the perfect environment for deep work.",
-        "content": "<p>A cluttered space often leads to a cluttered mind...</p>"
+        "excerpt": "Declutter your desk, declutter your mind.",
+        "content": """<p>A cluttered space often leads to a cluttered mind. In an age of constant distraction, the ability to focus without interruption—deep work—is a superpower. It allows you to master hard things quickly and produce at an elite level.</p>
+<p>Start by auditing your environment. Remove visual noise. Turn off notifications. Create a dedicated workspace that signals to your brain that it's time to focus. It's not just about minimalism; it's about intentionality. Every object on your desk should serve a purpose.</p>
+<p>Schedule deep work blocks in your calendar and treat them as sacred. During these times, you are unavailable. This practice, combined with a tidy physical and digital space, can exponentially increase your output and satisfaction.</p>"""
     },
     {
         "id": 7,
         "title": "The Future of Quantum Computing",
         "category": "Technology",
-        "date": "August 15, 2026",
+        "date": "January 20, 2026",
         "image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "How quantum supremacy will revolutionize cryptography and complex problem solving.",
-        "content": "<p>Quantum computing is no longer science fiction...</p>"
+        "excerpt": "Revolutionizing cryptography and problem solving.",
+        "content": """<p>Quantum computing is no longer science fiction. With recent breakthroughs in qubit stability and error correction, we are edging closer to practical applications that could reshape industries.</p>
+<p>Unlike classical bits that are either 0 or 1, qubits exist in a state of superposition, processing a vast amount of data simultaneously. This makes them exponentially faster at solving specific types of problems, such as simulating molecular structures for drug discovery or optimizing complex logistics networks.</p>
+<p>However, this power threatens current encryption standards. The race is on to develop post-quantum cryptography to secure data against future quantum attacks. We are standing at the precipice of a new computing era.</p>"""
     },
     {
         "id": 8,
         "title": "Minimalist Living: A Guide",
         "category": "Lifestyle",
-        "date": "August 10, 2026",
+        "date": "January 15, 2026",
         "image": "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Decluttering your life to focus on what truly matters.",
-        "content": "<p>Minimalism is about intentionality...</p>"
+        "excerpt": "Decluttering your life for focus.",
+        "content": """<p>Minimalism is about intentionality. It's not just about owning fewer things; it's about making room for more: more time, more peace, more creativity. By stripping away the non-essential, you can focus on what truly adds value to your life.</p>
+<p>Start small. Tackle one drawer, one shelf, or one category of items at a time. Ask yourself: Does this spark joy? Do I actually use this? The process of letting go can be liberating. It reduces decision fatigue and frees up mental energy.</p>
+<p>This philosophy extends beyond material possessions. Digital minimalism—curating your social media feeds, unsubscribing from emails—is just as important in maintaining mental clarity in a hyper-connected world.</p>"""
     },
     {
         "id": 9,
         "title": "VR Fitness: The New Gym",
         "category": "Technology",
-        "date": "August 05, 2026",
+        "date": "January 10, 2026",
         "image": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Working out in the metaverse: Is it effective?",
-        "content": "<p>Virtual Reality fitness apps are gaining traction...</p>"
+        "excerpt": "Working out in the metaverse.",
+        "content": """<p>Virtual Reality fitness apps are gaining traction as a fun and effective alternative to the traditional gym. Gamifying exercise makes it less of a chore and more of an adventure. Whether you're boxing to a beat, slashing cubes with lightsabers, or climbing virtual mountains, you're burning real calories.</p>
+<p>Studies show that VR can distract from physical exertion, allowing users to work out longer and harder without feeling the same level of fatigue. Plus, the convenience of working out from your living room eliminates the friction of traveling to a gym.</p>
+<p>As hardware becomes lighter and more comfortable, VR fitness is poised to become a mainstream way to stay healthy, blending entertainment with physical well-being.</p>"""
     },
     {
         "id": 10,
         "title": "Urban Gardening for Beginners",
         "category": "Lifestyle",
-        "date": "July 28, 2026",
+        "date": "January 05, 2026",
         "image": "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Growing your own food in small city apartments.",
-        "content": "<p>You don't need a backyard to garden...</p>"
+        "excerpt": "Growing food in small apartments.",
+        "content": """<p>You don't need a backyard to garden. Urban gardening is flourishing on balconies, windowsills, and rooftops. It connects us to nature, reduces stress, and provides fresh, pesticide-free produce right at home.</p>
+<p>Herbs like basil, mint, and rosemary are perfect for beginners; they require little space and thrive in pots. For those with a bit more room, cherry tomatoes, peppers, and leafy greens are rewarding options. Vertical gardening solutions allow you to maximize vertical space, turning a bare wall into a lush green oasis.</p>
+<p>Beyond the harvest, caring for plants offers a meditative break from the screen-dominated city life. It teaches patience and appreciation for the slow, steady cycles of nature.</p>"""
     },
     {
         "id": 11,
         "title": "The Art of Slow Coffee",
         "category": "Lifestyle",
-        "date": "July 20, 2026",
+        "date": "January 02, 2026",
         "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Why manual brewing methods are making a comeback in 2026.",
-        "content": "<p>Pour-over, AeroPress, French Press. The ritual is just as important as the caffeine.</p>"
+        "excerpt": "Manual brewing methods comeback.",
+        "content": """<p>Pour-over, AeroPress, French Press. The ritual is just as important as the caffeine. In a world of instant gratification, slow coffee is a deliberate pause. It forces you to slow down, measure, grind, and pour with precision.</p>
+<p>Manual brewing extracts complex flavors that automatic machines often miss. You control the variables: water temperature, grind size, and bloom time. The result is a cup that highlights the unique notes of the bean, from fruity acidity to deep chocolate undertones.</p>
+<p>It's a sensory experience that starts the day with mindfulness. Taking those few minutes to craft your cup sets a calm, intentional tone for everything that follows.</p>"""
     },
     {
         "id": 12,
         "title": "Digital Detox Weekends",
         "category": "Lifestyle",
-        "date": "July 15, 2026",
+        "date": "December 28, 2025",
         "image": "https://images.unsplash.com/photo-1501556466850-7c96197c3699?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Reclaiming your attention span by unplugging for 48 hours.",
-        "content": "<p>Constant notifications are destroying our focus. Here is how to successfully disconnect.</p>"
+        "excerpt": "Unplugging for 48 hours.",
+        "content": """<p>Constant notifications are destroying our focus. We are wired to be always on, always responding. A digital detox weekend is a radical act of self-care. It means logging off, shutting down, and checking back into the physical world.</p>
+<p>Without the constant dopamine hits of social media, you might feel bored at first. Embrace it. Boredom is the breeding ground for creativity. Read a book, go for a hike without headphones, cook a meal from scratch, or simply have a conversation without glancing at a screen.</p>
+<p>Disconnecting allows you to reset your circadian rhythms and reduce anxiety. You'll return to your devices on Monday with a clearer head and a healthier relationship with technology.</p>"""
     },
     {
         "id": 13,
         "title": "Sustainable Fashion Choices",
         "category": "Lifestyle",
-        "date": "July 10, 2026",
+        "date": "December 20, 2025",
         "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        "excerpt": "Building a capsule wardrobe that looks good and respects the planet.",
-        "content": "<p>Fast fashion is out. Quality pieces are in.</p>"
+        "excerpt": "Building a capsule wardrobe.",
+        "content": """<p>Fast fashion is out. Quality pieces are in. The fashion industry is one of the largest polluters, but consumers are voting with their wallets for sustainability. It starts with buying less and buying better.</p>
+<p>A capsule wardrobe consists of versatile, high-quality staples that can be mixed and matched. Focus on natural fabrics like organic cotton, linen, and wool. Thrift shopping and upcycling are also powerful ways to refresh your style without the carbon footprint of new garments.</p>
+<p>Fashion is a form of self-expression. Choosing sustainable brands or second-hand treasures tells a story about your values. It’s about looking good while doing good for the planet.</p>"""
     }
 ]
 
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
 @app.route('/about')
